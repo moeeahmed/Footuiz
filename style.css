@@ -102,3 +102,27 @@ header span:hover {
   text-align: center;
   font-size: 22px;
 }
+
+.dropdown__content {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.dropdown__content li {
+  background-color: white;
+  font-size: 24px;
+  width: 100%;
+  padding: 15px;
+  margin: 0 auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown__content li img {
+  width: 50px;
+}
+
+.dropdown__content li:hover {
+  background-color: wheat;
+}
