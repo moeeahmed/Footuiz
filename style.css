@@ -53,3 +53,52 @@ header span:hover {
   font-weight: bold;
   margin: 0.4rem 0 0.4rem 0;
 }
+
+.board__container {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1;
+  flex-direction: column;
+  margin-block: 20px 50px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.column__headings {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 5px;
+  padding: 10px;
+  color: wheat;
+  text-align: center;
+  border-bottom: 1px solid wheat;
+  margin-block: 5px 25px;
+  font-size: 20px;
+  font-weight: bold;
+  width: 80%;
+}
+
+.input__container {
+  height: 200px;
+}
+
+.inputbox {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.inputbox input {
+  padding: 15px;
+  border-radius: 3px;
+  outline: none;
+  background: #756c6c;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #000;
+  font-size: 14px;
+  transition: 0.5s;
+  text-align: center;
+  font-size: 22px;
+}
