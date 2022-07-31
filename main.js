@@ -9,12 +9,33 @@ const stats = document.querySelector(".stats__btn");
 const input = document.querySelector(".input");
 const dropdown = document.querySelector(".dropdown__content");
 
+const modal = document.getElementById("myModal");
+const span = document.querySelectorAll(".close");
+const played = document.getElementById("played");
+const winsPerc = document.getElementById("wins%");
+const wins = document.getElementById("wins");
+const losses = document.getElementById("lost");
+const countdown = document.querySelector(".countdown");
+const guessDistr = document.querySelector(".guessDistribution");
+
 const playersList = JSON.parse(localStorage.getItem("playersJSON"));
 const positions = {
   Goalkeeper: "GK",
   Defender: "DEF",
   Midfielder: "MID",
   Attacker: "ATT",
+};
+
+var myHeaders = new Headers();
+myHeaders.append(
+  "x-rapidapi-key",
+  "30ed2e8068msh665e0a00b3e88bfp19771ajsnf51cb30bc833"
+);
+myHeaders.append("x-rapidapi-host", "api-football-v1.p.rapidapi.com");
+var requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow",
 };
 
 //Class to encapsulate app info
@@ -53,7 +74,16 @@ class App {
     });
 
     input.addEventListener("input", this.__predictiveText.bind(this));
+    help.addEventListener("click", this.__showModal.bind(this));
+    stats.addEventListener("click", this.__showModal.bind(this));
 
+    span.forEach((e) => {
+      e.onclick = this.__closeModal;
+    });
+
+    window.onclick = (event) => {
+      if (event.target == modal) this.__closeModal(event);
+    };
     this.__timer();
   }
 
@@ -86,6 +116,21 @@ class App {
 
     modal.classList.toggle("hide");
     boardContainer.style.filter = null;
+  }
+
+  //Showing modals on screen
+  __showModal(e) {
+    modal.classList.remove("hide");
+
+    if (e?.target.parentElement.classList.contains("help__btn")) {
+      modal.children[1].classList.toggle("hide");
+    } else {
+      modal.children[0].classList.toggle("hide");
+    }
+
+    boardContainer.style.filter = "blur(4px)";
+    modal.style.display = null;
+    modal.classList.add("fade-in");
   }
 
   //if there are stats history do this first
@@ -361,7 +406,7 @@ class App {
           guess.classList.add("slideDown");
           board.childNodes[i].classList.remove("hide");
 
-          await wait(0.15);
+          await this.__wait(0.15);
         }
       }
     }.bind(this)());
@@ -400,7 +445,7 @@ class App {
 
   //disable the textbox and popup modal
   __updateUI() {
-    document.querySelector("#input-container").style.display = "none";
+    inputContainer.style.display = "none";
 
     this.__wait(2)
       .then(() => {
@@ -445,21 +490,6 @@ class App {
     this.__updateLocalStorage();
   }
 
-  //Showing modals on screen
-  __showModal(e) {
-    modal.classList.remove("hide");
-
-    if (e?.target.parentElement.classList.contains("help")) {
-      modal.children[1].classList.toggle("hide");
-    } else {
-      modal.children[0].classList.toggle("hide");
-    }
-
-    boardContainer.style.filter = "blur(4px)";
-    modal.style.display = null;
-    modal.classList.add("fade-in");
-  }
-
   //Update the local Storage at the end of the game
   async __updateLocalStorage() {
     await this.__asyncLocalStorage.setItem("stats", this.#stats);
@@ -490,4 +520,21 @@ class App {
 }
 
 //Create an instance of the App class
-const app = new App();
+let app;
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+(async function () {
+  try {
+    boardContainer.style.display = inputContainer.style.display = "none";
+    await wait(3);
+  } finally {
+    document.querySelector(".box").style.display = "none";
+    boardContainer.style.display = inputContainer.style.display = null;
+    app = new App();
+  }
+})();

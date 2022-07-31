@@ -20,6 +20,12 @@
                 <span class="stats__btn"><i class="fa-solid fa-ranking-star"></i></span>
                 <span class="help__btn"><i class="fa-solid fa-circle-question"></i></span>
             </header>
+            <div class="box">
+                <div class="shadow"></div>
+                <div class="gravity">
+                    <div class="ball"></div>
+                </div>
+            </div>
             <div class="board__container">
                 <div class="column__headings">
                     <p>Nation</p>
@@ -30,13 +36,77 @@
                 </div>
             </div>
             <div class="input__container">
-                <form class="form inputbox" type="submit">
+                <form class="form input__box" type="submit">
                     <input class="input" type="text">
                     <!-- <div class="dropdown-content">
                         </div> -->
                     <ul class="dropdown__content">
                     </ul>
                 </form>
+            </div>
+            <div id="myModal" class="modal hide">
+                <!-- Modal content -->
+                <div class="modal-content stats__Modal hide">
+                    <span class="close">&times;</span>
+                    <div class="title">
+                        <p>STATISTICS</p>
+                    </div>
+                    <div class="stats">
+                        <p><span id="played"></span>Played</p>
+                        <p><span id="wins"></span>Wins</p>
+                        <p><span id="wins%"></span>Win %</p>
+                        <p><span id="lost"></span>Lost</p>
+                    </div>
+                    <div class="guessDistribution">
+                        <div class="heading">
+                            <h4>Guess Distribution</h4>
+                        </div>
+                        <p data-id="1">1</p>
+                        <p data-id="2">2</p>
+                        <p data-id="3">3</p>
+                        <p data-id="4">4</p>
+                        <p data-id="5">5</p>
+                        <p data-id="6">6</p>
+                    </div>
+                    <hr>
+                    <div class="modalFooter">
+                        <div class="leftSide">
+                            <p>Next Footuiz</p>
+                            <time class="countdown"></time>
+                        </div>
+                        <div class="rightSide">
+
+                            <button type="submit" class="share-button"><i class="fas fa-share-alt"></i> Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-content help__Modal hide">
+                    <span class="close">&times;</span>
+                    <div class="title">
+                        <p>HOW TO PLAY</p>
+                    </div>
+                    <p>Guess the <strong>Player</strong> in five attempts</p>
+                    <p>Each guess must be a valid football player. Chose a player from the dropdown to submit.</p>
+                    <p>After each guess, the color of the tiles will change to show how close your guess was to the
+                        player.</p>
+                    <div class="help__examples">
+                        <p><strong>Example</strong></p>
+                        <div class="help__examples__1">
+                            <div class="square bounce" style=" background: darkseagreen;"><img
+                                    src="https://flagcdn.com/br.svg"></div>
+                            <div class="square" style=" background: rgb(206, 213, 92);">
+                                <img src="https://media.api-sports.io/football/teams/66.png">
+                            </div>
+                            <div class="square bounce" style=" background: darkseagreen;">10</div>
+                            <div class="square bounce" style=" background: darkseagreen;">MID</div>
+                            <div class="square" style=" background: indianred;"><span class="arrows">⬇</span>30</div>
+                        </div>
+                        <p>The player is from <strong>Brazil</strong>, wears the <strong>number 10</strong> shirt
+                            and is a <strong>midfielders</strong>. The <strong>league</strong> is correct but the player
+                            is <strong>younger than 30</strong></p>
+                    </div>
+                    <p><strong>A new FOOTUIZ will be available every day!</strong></p>
+                </div>
             </div>
         </div>
 </body>
