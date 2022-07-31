@@ -29,15 +29,6 @@ const positions = {
   Attacker: "ATT",
 };
 
-var myHeaders = new Headers();
-myHeaders.append("x-rapidapi-key", config.MY_KEY);
-myHeaders.append("x-rapidapi-host", "api-football-v1.p.rapidapi.com");
-var requestOptions = {
-  method: "GET",
-  headers: myHeaders,
-  redirect: "follow",
-};
-
 //Class to encapsulate app info
 class App {
   #history = {
@@ -165,6 +156,8 @@ class App {
 
       if (this.#stats.gameStatus != "IN_PROGRESS") {
         this.__updateUI();
+      } else {
+        inputContainer.classList.remove("hide");
       }
     } else {
       inputContainer.classList.remove("hide");
@@ -195,7 +188,7 @@ class App {
             season: 2022,
           },
           position: "Attacker",
-          number: "?",
+          number: 7,
         },
         gameStatus: "IN_PROGRESS",
         lastPlayedTs: new Date().getTime(),
@@ -205,7 +198,16 @@ class App {
 
   //Get JSONs for APIs
   async __getJSON(url) {
-    return (await fetch(url, requestOptions)).json();
+    return (
+      await fetch(url, {
+        method: "GET",
+        headers: {
+          "x-rapidapi-key": config.MY_KEY,
+          "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
+        },
+        redirect: "follow",
+      })
+    ).json();
   }
 
   //Predict player by taking current input and create dropdown
@@ -312,16 +314,15 @@ class App {
 
     (async function () {
       try {
-        this.#userGuess.number = "?";
-        // (
-        //   await this.__getJSON(
-        //     `https://api-football-v1.p.rapidapi.com/v3/players/squads?player=${
-        //       this.#userGuess.id
-        //     }`
-        //   )
-        // ).response.find(
-        //   e => e.team.name === this.#userGuess.team.name
-        // ).players[0].number;
+        this.#userGuess.number = (
+          await this.__getJSON(
+            `https://api-football-v1.p.rapidapi.com/v3/players/squads?player=${
+              this.#userGuess.id
+            }`
+          )
+        ).response.find(
+          (e) => e.team.name === this.#userGuess.team.name
+        ).players[0].number;
       } catch (err) {
         console.error(new Error(err));
       } finally {
@@ -460,12 +461,6 @@ class App {
   //disable the textbox and popup modal
   __updateUI() {
     inputContainer.classList.add("hide");
-    inputContainer.classList.add("hide");
-    inputContainer.classList.add("hide");
-    inputContainer.classList.add("hide");
-    inputContainer.classList.add("hide");
-
-    console.log(inputContainer);
 
     this.__wait(2)
       .then(() => {
