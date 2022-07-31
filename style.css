@@ -12,20 +12,29 @@ body {
 }
 
 header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 6fr 1fr;
   border-bottom: 1px solid rgb(58, 58, 60);
   justify-content: center;
 }
 
-header span {
+header .attempts {
+  color: gainsboro;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: auto 0;
+  text-align: left;
+}
+
+.header__btns {
   color: gainsboro;
   font-size: 1.3rem;
   font-weight: bold;
   margin: auto 0;
-  padding-left: 10px;
+  text-align: right;
 }
 
-header span:hover {
+.header__btns > *:hover {
   color: wheat;
 }
 
