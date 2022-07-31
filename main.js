@@ -67,7 +67,6 @@ class App {
       } finally {
         loadingBox.style.display = "none";
         boardContainer.style.display = "flex";
-        inputContainer.classList.remove("hide");
       }
 
       // this.#stats.solution.number = (
@@ -168,6 +167,7 @@ class App {
         this.__updateUI();
       }
     } else {
+      inputContainer.classList.remove("hide");
       attempts.textContent += `5`;
       this.#stats = {
         boardState: [],
@@ -460,6 +460,12 @@ class App {
   //disable the textbox and popup modal
   __updateUI() {
     inputContainer.classList.add("hide");
+    inputContainer.classList.add("hide");
+    inputContainer.classList.add("hide");
+    inputContainer.classList.add("hide");
+    inputContainer.classList.add("hide");
+
+    console.log(inputContainer);
 
     this.__wait(2)
       .then(() => {
