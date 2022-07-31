@@ -16,7 +16,7 @@ This is written with HTML, CSS and vanilla Javascript. This is my first web appl
 
     Simply select your intended player
 
-    > !(/assets/howToPlay_img1.png)
+    > ![](/assets/howToPlay_img1.png)
 
 2.  Once you select a player, your guess will appear in the GUI.
 
@@ -28,4 +28,4 @@ This is written with HTML, CSS and vanilla Javascript. This is my first web appl
 
     Use the help icon if the top right corner for more info
 
-    > !(/assets/howToPlay_img2.png)
+    > ![](/assets/howToPlay_img2.png)
