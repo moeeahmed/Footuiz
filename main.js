@@ -28,10 +28,7 @@ const positions = {
 };
 
 var myHeaders = new Headers();
-myHeaders.append(
-  "x-rapidapi-key",
-  "30ed2e8068msh665e0a00b3e88bfp19771ajsnf51cb30bc833"
-);
+myHeaders.append("x-rapidapi-key", config.MY_KEY);
 myHeaders.append("x-rapidapi-host", "api-football-v1.p.rapidapi.com");
 var requestOptions = {
   method: "GET",
