@@ -1,6 +1,8 @@
 "use strict";
 
 //DOM selectors initialisings
+const loadingBox = document.querySelector(".box");
+
 const game = document.querySelector(".game");
 const boardContainer = document.querySelector(".board__container");
 const inputContainer = document.querySelector(".input__container");
@@ -57,7 +59,17 @@ class App {
     // this.__updateLocalStorage.bind(this);
 
     (async function () {
-      this.__localStorageBackup();
+      try {
+        console.log("Fetching data from local storage");
+        this.__localStorageBackup();
+      } catch (err) {
+        console.errror(new Error(err));
+      } finally {
+        loadingBox.style.display = "none";
+        boardContainer.style.display = "flex";
+        inputContainer.style.display = "block";
+      }
+
       // this.#stats.solution.number = (
       //   await this.__getJSON(
       //     `https://api-football-v1.p.rapidapi.com/v3/players/squads?player=${this.#stats.solution.id}`
@@ -183,13 +195,12 @@ class App {
             season: 2022,
           },
           position: "Attacker",
-          number: "?",
+          number: 7,
         },
         gameStatus: "IN_PROGRESS",
         lastPlayedTs: new Date().getTime(),
       };
     }
-    //create the board for each existing item
   }
 
   //Get JSONs for APIs
@@ -349,7 +360,7 @@ class App {
       try {
         const flag = await this.__getJSON(
           `https://restcountries.com/v3.1/name/${
-            gehsus.nationality === "England"
+            gehsus.nationality === "England" || "Scotland" || "Wales"
               ? "United Kingdom"
               : gehsus.nationality
           }`
@@ -523,21 +534,4 @@ class App {
 }
 
 //Create an instance of the App class
-let app;
-
-const wait = function (seconds) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, seconds * 1000);
-  });
-};
-
-(async function () {
-  try {
-    boardContainer.style.display = inputContainer.style.display = "none";
-    await wait(3);
-  } finally {
-    document.querySelector(".box").style.display = "none";
-    boardContainer.style.display = inputContainer.style.display = null;
-    app = new App();
-  }
-})();
+const app = new App();
