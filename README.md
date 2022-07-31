@@ -11,19 +11,21 @@ This is written with HTML, CSS and vanilla Javascript. This is my first web appl
 ## How to play the game
 
 1.  It is very simple, just enter your guess into the inputbox provided on the GUI.
+
     You will get a dropdown list of all players the match your input
+
     Simply select your intended player
 
-    > (/assets/howToPlay_img1.png)
+    > !(/assets/howToPlay_img1.png)
 
 2.  Once you select a player, your guess will appear in the GUI.
 
-        Any details that are correct have a green background and are animated
+    Any details that are correct have a green background and are animated
 
-        Red means that detail is wrong
+    Red means that detail is wrong
 
-        Yellow means you're on the right parh
+    Yellow means you're on the right parh
 
-        Use the help icon if the top right corner for more info
+    Use the help icon if the top right corner for more info
 
-    > (/assets/howToPlay_img2.png)
+    > !(/assets/howToPlay_img2.png)
