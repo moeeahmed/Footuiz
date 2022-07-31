@@ -8,6 +8,7 @@ const help = document.querySelector(".help__btn");
 const stats = document.querySelector(".stats__btn");
 const input = document.querySelector(".input");
 const dropdown = document.querySelector(".dropdown__content");
+const attempts = document.querySelector(".attempts");
 
 const modal = document.getElementById("myModal");
 const span = document.querySelectorAll(".close");
@@ -139,6 +140,8 @@ class App {
     this.#stats = JSON.parse(localStorage.getItem("stats"));
 
     if (this.#stats) {
+      attempts.textContent += `${5 - this.#stats.rowIndex}`;
+
       this.#stats.boardState.forEach(({ id }) =>
         playersList.splice(
           playersList.findIndex((e) => e.id === id),
@@ -156,6 +159,7 @@ class App {
         this.__updateUI();
       }
     } else {
+      attempts.textContent += `5`;
       this.#stats = {
         boardState: [],
         evaluations: [],
@@ -414,6 +418,8 @@ class App {
 
   //Check to see if user has won or lost
   __checkResult(result, attempt) {
+    attempts.textContent = `Attempts left: ${5 - attempt}`;
+
     //Update local items
     this.__updateLocalStorage();
 
