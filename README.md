@@ -1,6 +1,6 @@
 # Footuiz
 
-A recreation of the popular game Wordle eith a football rendition.
+A recreation of the popular game Wordle with a football rendition.
 
 # Technical details
 
