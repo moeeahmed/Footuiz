@@ -34,4 +34,10 @@ This is written with HTML, CSS and vanilla Javascript. This is my first web appl
 
     If you use up all your 5 chances, you lose and the correct player will be revealed
 
-> ![](/assets/howToPlay_img3.png)
+    > ![](/assets/howToPlay_img3.png)
+
+4.  Otherwise if you guess the correct player in the allowed number of changes **YOU WIN!!!**
+
+    You will have **GREEENS** all round and your stats will be incremented as a rewards ☺
+
+    > ![](/assets/howToPlay_img4.png)
