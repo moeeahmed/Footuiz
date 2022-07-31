@@ -67,7 +67,7 @@ class App {
       } finally {
         loadingBox.style.display = "none";
         boardContainer.style.display = "flex";
-        inputContainer.style.display = "block";
+        inputContainer.classList.remove("hide");
       }
 
       // this.#stats.solution.number = (
@@ -195,7 +195,7 @@ class App {
             season: 2022,
           },
           position: "Attacker",
-          number: 7,
+          number: "?",
         },
         gameStatus: "IN_PROGRESS",
         lastPlayedTs: new Date().getTime(),
@@ -459,7 +459,7 @@ class App {
 
   //disable the textbox and popup modal
   __updateUI() {
-    inputContainer.style.display = "none";
+    inputContainer.classList.add("hide");
 
     this.__wait(2)
       .then(() => {
