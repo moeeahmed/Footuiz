@@ -29,3 +29,9 @@ This is written with HTML, CSS and vanilla Javascript. This is my first web appl
     Use the help icon if the top right corner for more info
 
     > ![](/assets/howToPlay_img2.png)
+
+3.  You have 5 oppurtunities to correct the right player
+
+    If you use up all your 5 chances, you lose and the correct player will be revealed
+
+> ![](/assets/howToPlay_img3.png)
