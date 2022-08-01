@@ -1,0 +1,23 @@
+{
+  "name": "footuiz",
+  "description": "A recreation of the popular game Wordle with a football rendition.",
+  "version": "1.0.0",
+  "main": "main.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moeeahmed/Footuiz.git"
+  },
+  "author": "Mohammed Ahamed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moeeahmed/Footuiz/issues"
+  },
+  "homepage": "https://github.com/moeeahmed/Footuiz#readme",
+  "dependencies": {
+    "lodash-es": "^4.17.21"
+  }
+}
