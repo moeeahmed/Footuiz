@@ -34,26 +34,28 @@ class App {
   #history = {
     averageGuesses: 0,
     currentStreak: 0,
-    gamesPlayed: 33,
-    gamesWon: 21,
-    guesses: [3, 4, 10, 1, 3, 0],
+    fails: 0,
+    gamesPlayed: 0,
+    gamesWon: 0,
+    guesses: [0, 0, 0, 0, 0, 0],
     maxStreak: 0,
     winPercentage: 0,
-    fails: 12,
   };
   #result = [];
   #userGuess;
   #stats;
 
   constructor() {
-    // this.__asyncLocalStorage.getItem().then(res => (this.#history = res));
-    // this.__updateLocalStorage.bind(this);
+    this.__updateLocalStorage.bind(this);
 
     (async function () {
       try {
+        //getting history from local storage if exists or initialise if first time player
+        this.#history = this.__asyncLocalStorage.getItem() || this.#history;
+
         console.log("Getting players from server");
-        const b = await this.__getPlayers();
-        this.#players = (await b.json()).doc;
+        const resp = await this.__getPlayers();
+        this.#players = (await resp.json()).doc;
 
         console.log("Fetching data from local storage");
 
@@ -86,12 +88,12 @@ class App {
 
   //GET and SET game data in local storage
   __asyncLocalStorage = {
-    setItem: async function (string, item) {
-      await null;
+    setItem: function (string, item) {
+      //await null;
       localStorage.setItem(string, JSON.stringify(item));
     },
-    getItem: async function () {
-      await null;
+    getItem: function () {
+      //await null;
       return JSON.parse(localStorage.getItem("footuizHistory"));
     },
   };
@@ -140,6 +142,9 @@ class App {
     //get game status
     this.#stats = JSON.parse(localStorage.getItem("stats"));
 
+    //populate Statistics modal
+    this.__populateStatistics();
+
     if (this.#stats) {
       attempts.textContent += `${5 - this.#stats.rowIndex}`;
 
@@ -153,7 +158,6 @@ class App {
       for (let i = this.#stats.boardState.length - 1; i >= 0; i--) {
         //this.#result = this.#stats.evaluations[i];
         this.__createBoard(this.#stats.boardState[i], i);
-        this.__populateStatistics();
       }
 
       if (this.#stats.gameStatus != "IN_PROGRESS") {
@@ -189,7 +193,7 @@ class App {
             flag: "https://media.api-sports.io/flags/gb.svg",
             season: 2022,
           },
-          position: "Attacker",
+          position: "Midfielder",
           number: 7,
         },
         gameStatus: "IN_PROGRESS",
@@ -203,10 +207,6 @@ class App {
     return (
       await fetch(url, {
         method: "GET",
-        headers: {
-          "x-rapidapi-key": config.MY_KEY,
-          "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-        },
         redirect: "follow",
       })
     ).json();
@@ -477,7 +477,7 @@ class App {
     this.#history.gamesPlayed++;
   }
 
-  //Get record stored in cookies and display here
+  //Get record stored in localstorage and display here
   __populateStatistics() {
     const winPerc = Math.round(
       (this.#history.gamesWon / this.#history.gamesPlayed) * 100
@@ -502,9 +502,9 @@ class App {
   }
 
   //Update the local Storage at the end of the game
-  async __updateLocalStorage() {
-    await this.__asyncLocalStorage.setItem("stats", this.#stats);
-    await this.__asyncLocalStorage.setItem("footuizHistory", this.#history);
+  __updateLocalStorage() {
+    this.__asyncLocalStorage.setItem("stats", this.#stats);
+    this.__asyncLocalStorage.setItem("footuizHistory", this.#history);
   }
 
   //Timer until the next guess is available for the user
