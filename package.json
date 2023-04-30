@@ -3,7 +3,6 @@
   "description": "A recreation of the popular game Wordle with a football rendition.",
   "version": "1.0.0",
   "main": "main.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,6 +17,7 @@
   },
   "homepage": "https://github.com/moeeahmed/Footuiz#readme",
   "dependencies": {
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "nodemon": "^2.0.19"
   }
 }

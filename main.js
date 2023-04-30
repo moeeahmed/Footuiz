@@ -21,7 +21,6 @@ const losses = document.getElementById("lost");
 const countdown = document.querySelector(".countdown");
 const guessDistr = document.querySelector(".guessDistribution");
 
-const playersList = JSON.parse(localStorage.getItem("playersJSON"));
 const positions = {
   Goalkeeper: "GK",
   Defender: "DEF",
@@ -31,43 +30,44 @@ const positions = {
 
 //Class to encapsulate app info
 class App {
+  #players;
   #history = {
     averageGuesses: 0,
     currentStreak: 0,
-    gamesPlayed: 33,
-    gamesWon: 21,
-    guesses: [3, 4, 10, 1, 3, 0],
+    fails: 0,
+    gamesPlayed: 0,
+    gamesWon: 0,
+    guesses: [0, 0, 0, 0, 0, 0],
     maxStreak: 0,
     winPercentage: 0,
-    fails: 12,
   };
   #result = [];
   #userGuess;
   #stats;
 
   constructor() {
-    // this.__asyncLocalStorage.getItem().then(res => (this.#history = res));
-    // this.__updateLocalStorage.bind(this);
+    this.__updateLocalStorage.bind(this);
 
     (async function () {
       try {
+        //getting history from local storage if exists or initialise if first time player
+        this.#history = this.__asyncLocalStorage.getItem() || this.#history;
+
+        console.log("Getting players from server");
+        const response = await this.__getPlayers();
+        const resp = await response.json();
+        this.#players = resp.players;
+
         console.log("Fetching data from local storage");
+
         this.__localStorageBackup();
       } catch (err) {
-        console.errror(new Error(err));
+        console.error(err);
       } finally {
         loadingBox.style.display = "none";
         boardContainer.style.display = "flex";
       }
-
-      // this.#stats.solution.number = (
-      //   await this.__getJSON(
-      //     `https://api-football-v1.p.rapidapi.com/v3/players/squads?player=${this.#stats.solution.id}`
-      //   )
-      // ).response.find(
-      //   e => e.team.name === this.#stats.solution.team.name
-      // ).players[0].number;
-    }.bind(this)());
+    }).bind(this)();
 
     dropdown.addEventListener("click", (e) => {
       this.__checkGuess(e.target.closest("li").id);
@@ -89,15 +89,18 @@ class App {
 
   //GET and SET game data in local storage
   __asyncLocalStorage = {
-    setItem: async function (string, item) {
-      await null;
+    setItem: function (string, item) {
+      //await null;
       localStorage.setItem(string, JSON.stringify(item));
     },
-    getItem: async function () {
-      await null;
+    getItem: function () {
+      //await null;
       return JSON.parse(localStorage.getItem("footuizHistory"));
     },
   };
+
+  __getPlayers = async () =>
+    await fetch("http://3.8.180.45:9000/api/v1/players/getAllPlayers");
 
   //Delay function
   __wait(seconds) {
@@ -138,12 +141,16 @@ class App {
     //get game status
     this.#stats = JSON.parse(localStorage.getItem("stats"));
 
+    //populate Statistics modal
+    this.__populateStatistics();
+
     if (this.#stats) {
-      attempts.textContent += `${5 - this.#stats.rowIndex}`;
+      console.log(attempts.textContent);
+      attempts.textContent = ` ${5 - this.#stats.rowIndex}`;
 
       this.#stats.boardState.forEach(({ id }) =>
-        playersList.splice(
-          playersList.findIndex((e) => e.id === id),
+        this.#players.splice(
+          this.#players.findIndex((e) => e.id === id),
           1
         )
       );
@@ -151,7 +158,6 @@ class App {
       for (let i = this.#stats.boardState.length - 1; i >= 0; i--) {
         //this.#result = this.#stats.evaluations[i];
         this.__createBoard(this.#stats.boardState[i], i);
-        this.__populateStatistics();
       }
 
       if (this.#stats.gameStatus != "IN_PROGRESS") {
@@ -166,30 +172,8 @@ class App {
         boardState: [],
         evaluations: [],
         rowIndex: 0,
-        solution: {
-          id: 1460,
-          name: "Bukayo Saka",
-          firstname: "Bukayo",
-          lastname: "Saka",
-          age: 21,
-          nationality: "England",
-          photo: "https://media.api-sports.io/football/players/1460.png",
-          team: {
-            id: 42,
-            name: "Arsenal",
-            logo: "https://media.api-sports.io/football/teams/42.png",
-          },
-          league: {
-            id: 39,
-            name: "Premier League",
-            country: "England",
-            logo: "https://media.api-sports.io/football/leagues/39.png",
-            flag: "https://media.api-sports.io/flags/gb.svg",
-            season: 2022,
-          },
-          position: "Attacker",
-          number: 7,
-        },
+        solution:
+          this.#players[Math.floor(Math.random() * this.#players.length) + 1],
         gameStatus: "IN_PROGRESS",
         lastPlayedTs: new Date().getTime(),
       };
@@ -201,10 +185,6 @@ class App {
     return (
       await fetch(url, {
         method: "GET",
-        headers: {
-          "x-rapidapi-key": config.MY_KEY,
-          "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-        },
         redirect: "follow",
       })
     ).json();
@@ -217,25 +197,24 @@ class App {
     let regex = new RegExp("^" + input.value, "i");
 
     //eric bailly won't work because his full name is Eric Bertrand Bailly
-
-    for (let i in playersList) {
+    for (let i in this.#players) {
       if (
-        (regex.test(playersList[i].name) ||
-          regex.test(playersList[i].firstname) ||
-          regex.test(playersList[i].lastname) ||
+        (regex.test(this.#players[i].name) ||
+          regex.test(this.#players[i].firstname) ||
+          regex.test(this.#players[i].lastname) ||
           regex.test(
-            playersList[i].firstname + " " + playersList[i].lastname
+            this.#players[i].firstname + " " + this.#players[i].lastname
           )) &&
         input.value.length != 0
       ) {
-        predicted.push(playersList[i]);
+        predicted.push(this.#players[i]);
       }
     }
 
     predicted.forEach((e) => {
       dropdown.insertAdjacentHTML(
         "beforeend",
-        `<li id ="${e.name}" ><img src=  "${e.team.logo}"><p>${
+        `<li id ="${e.name}" ><img src=  "${e.teamLogo}"><p>${
           e.firstname + " " + e.lastname
         }</p></li>`
       );
@@ -247,7 +226,7 @@ class App {
     const x = document.createElement("div");
     const playerName = document.createElement("p");
 
-    playerName.textContent = obj.lastname.split(" ").at(-1);
+    playerName.textContent = obj.name;
 
     x.classList.add(className, "hide");
 
@@ -286,11 +265,13 @@ class App {
 
   //check the guess against
   __isValuesSame(field) {
+    //Checks if the fields for the correct answer are the same as those the user has guessed
+    //Each field is then given a correct/ present / absent
     if (field === "team") {
       this.#result.push(
-        this.#userGuess[field].name == this.#stats.solution[field].name
+        this.#userGuess[field] == this.#stats.solution[field].name
           ? "correct"
-          : this.#userGuess.league.name == this.#stats.solution.league.name
+          : this.#userGuess.league == this.#stats.solution.league.name
           ? "present"
           : "absent"
       );
@@ -306,45 +287,29 @@ class App {
   //Check the user guess against the correct answer
   __checkGuess(guess) {
     //Get the guess user made from data
-    //Remove from list so user can pick that player again
-    [this.#userGuess] = playersList.splice(
-      playersList.findIndex((e) => e.name === guess),
+    //Remove from list so user cant pick that player again
+    [this.#userGuess] = this.#players.splice(
+      this.#players.findIndex((e) => e.name === guess),
       1
     );
 
-    (async function () {
-      try {
-        this.#userGuess.number = (
-          await this.__getJSON(
-            `https://api-football-v1.p.rapidapi.com/v3/players/squads?player=${
-              this.#userGuess.id
-            }`
-          )
-        ).response.find(
-          (e) => e.team.name === this.#userGuess.team.name
-        ).players[0].number;
-      } catch (err) {
-        console.error(new Error(err));
-      } finally {
-        ["nationality", "team", "number", "position", "age"].forEach((e) => {
-          this.__isValuesSame(e);
-        });
+    ["nationality", "team", "number", "position", "age"].forEach((e) => {
+      this.__isValuesSame(e);
+    });
 
-        //store data in LS if user closes app
-        this.#stats.boardState.unshift(this.#userGuess);
-        this.#stats.evaluations.unshift(this.#result);
+    //store data in LS if user closes app
+    this.#stats.boardState.unshift(this.#userGuess);
+    this.#stats.evaluations.unshift(this.#result);
 
-        //Clear input and dropwdown after guess submission
-        input.value = "";
-        dropdown.textContent = "";
-        this.#stats.rowIndex++;
-        this.__createBoard(this.#userGuess);
-        this.__checkResult(this.#stats.evaluations, this.#stats.rowIndex);
+    //Clear input and dropwdown after guess submission
+    input.value = "";
+    dropdown.textContent = "";
+    this.#stats.rowIndex++;
+    this.__createBoard(this.#userGuess);
+    this.__checkResult(this.#stats.evaluations, this.#stats.rowIndex);
 
-        //Clear results array after guess
-        this.#result = [];
-      }
-    }.bind(this)());
+    //Clear results array after guess
+    this.#result = [];
   }
 
   //Add items to each box
@@ -356,24 +321,39 @@ class App {
   __populateBoard(gehsus) {
     const board = document.querySelector(".board");
     const guess = document.querySelector(".guess");
+    const missingCountries = ["England", "Wales", "Scotland"];
 
     (async function () {
+      const country = missingCountries.includes(gehsus.nationality)
+        ? "United Kingdom"
+        : gehsus.nationality;
+
       try {
         const flag = await this.__getJSON(
-          `https://restcountries.com/v3.1/name/${
-            gehsus.nationality === "England" || "Scotland" || "Wales"
-              ? "United Kingdom"
-              : gehsus.nationality
-          }`
+          `https://restcountries.com/v3.1/name/${country}`
         );
         const html = `<img src="${flag[0].flags.svg}"></img>`;
 
+        //[0] Adds players national flag to the board
         this.__addToSquares(board.childNodes[0], html);
 
+        //[1] Adds players club crest to the baord
         this.__addToSquares(
           board.childNodes[1],
-          `<img src="${gehsus.team.logo}">`
+          `<img src="${gehsus.teamLogo}">`
         );
+
+        //[2] Adds players shirt number to the board
+        console.log(gehsus);
+        this.__addToSquares(board.childNodes[2], `${gehsus.number}`);
+
+        //[3]Adds players position played to the board
+        this.__addToSquares(
+          board.childNodes[3],
+          `${positions[gehsus.position]}`
+        );
+
+        //[4]Adds players age to the board
         this.__addToSquares(
           board.childNodes[4],
           `${
@@ -383,11 +363,6 @@ class App {
               ? '<span class="arrows">⬆</span>' + gehsus.age
               : '<span class="arrows"></span>' + gehsus.age
           }`
-        );
-        this.__addToSquares(board.childNodes[2], `${gehsus.number}`);
-        this.__addToSquares(
-          board.childNodes[3],
-          `${positions[gehsus.position]}`
         );
       } catch (err) {
         console.error(new Error(err));
@@ -422,7 +397,7 @@ class App {
           await this.__wait(0.15);
         }
       }
-    }.bind(this)());
+    }).bind(this)();
   }
 
   //Check to see if user has won or lost
@@ -481,7 +456,7 @@ class App {
     this.#history.gamesPlayed++;
   }
 
-  //Get record stored in cookies and display here
+  //Get record stored in localstorage and display here
   __populateStatistics() {
     const winPerc = Math.round(
       (this.#history.gamesWon / this.#history.gamesPlayed) * 100
@@ -506,9 +481,9 @@ class App {
   }
 
   //Update the local Storage at the end of the game
-  async __updateLocalStorage() {
-    await this.__asyncLocalStorage.setItem("stats", this.#stats);
-    await this.__asyncLocalStorage.setItem("footuizHistory", this.#history);
+  __updateLocalStorage() {
+    this.__asyncLocalStorage.setItem("stats", this.#stats);
+    this.__asyncLocalStorage.setItem("footuizHistory", this.#history);
   }
 
   //Timer until the next guess is available for the user
