@@ -44,6 +44,7 @@ class App {
   #result = [];
   #userGuess;
   #stats;
+  #solution;
 
   constructor() {
     this.__updateLocalStorage.bind(this);
@@ -66,7 +67,7 @@ class App {
         loadingBox.style.display = "none";
         boardContainer.style.display = "flex";
       }
-    }.bind(this)());
+    }).bind(this)();
 
     dropdown.addEventListener("click", (e) => {
       this.__checkGuess(e.target.closest("li").id);
@@ -99,9 +100,7 @@ class App {
   };
 
   __getPlayers = async () =>
-    await fetch(
-      "https://better-overshirt-bass.cyclic.app/api/v1/player/getAllPlayers"
-    );
+    await fetch("http://3.8.180.45:9000/api/v1/player/getAllPlayers");
 
   //Delay function
   __wait(seconds) {
@@ -172,30 +171,8 @@ class App {
         boardState: [],
         evaluations: [],
         rowIndex: 0,
-        solution: {
-          id: 1460,
-          name: "Bukayo Saka",
-          firstname: "Bukayo",
-          lastname: "Saka",
-          age: 21,
-          nationality: "England",
-          photo: "https://media.api-sports.io/football/players/1460.png",
-          team: {
-            id: 42,
-            name: "Arsenal",
-            logo: "https://media.api-sports.io/football/teams/42.png",
-          },
-          league: {
-            id: 39,
-            name: "Premier League",
-            country: "England",
-            logo: "https://media.api-sports.io/football/leagues/39.png",
-            flag: "https://media.api-sports.io/flags/gb.svg",
-            season: 2022,
-          },
-          position: "Midfielder",
-          number: 7,
-        },
+        solution:
+          this.#players[Math.floor(Math.random() * this.#players.length) + 1],
         gameStatus: "IN_PROGRESS",
         lastPlayedTs: new Date().getTime(),
       };
@@ -418,7 +395,7 @@ class App {
           await this.__wait(0.15);
         }
       }
-    }.bind(this)());
+    }).bind(this)();
   }
 
   //Check to see if user has won or lost
