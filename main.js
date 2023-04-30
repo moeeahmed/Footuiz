@@ -145,7 +145,6 @@ class App {
     this.__populateStatistics();
 
     if (this.#stats) {
-      console.log(attempts.textContent);
       attempts.textContent = ` ${5 - this.#stats.rowIndex}`;
 
       this.#stats.boardState.forEach(({ id }) =>
@@ -344,7 +343,7 @@ class App {
         );
 
         //[2] Adds players shirt number to the board
-        console.log(gehsus);
+
         this.__addToSquares(board.childNodes[2], `${gehsus.number}`);
 
         //[3]Adds players position played to the board
@@ -402,7 +401,7 @@ class App {
 
   //Check to see if user has won or lost
   __checkResult(result, attempt) {
-    attempts.textContent = `Attempts left: ${5 - attempt}`;
+    attempts.textContent = 5 - attempt;
 
     //Update local items
     this.__updateLocalStorage();
