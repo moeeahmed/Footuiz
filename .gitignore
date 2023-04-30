@@ -7,3 +7,5 @@ config.js
 node_modules
 
 .parcel-cache/
+
+.vscode
