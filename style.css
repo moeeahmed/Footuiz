@@ -13,7 +13,7 @@ body {
 
 header {
   display: grid;
-  grid-template-columns: 1fr 6fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
   border-bottom: 1px solid rgb(58, 58, 60);
   justify-content: center;
 }
@@ -506,4 +506,44 @@ hr {
   -webkit-animation-timing-function: ease;
 
   visibility: visible !important;
+}
+
+/*** Media Queries ***/
+@media screen and (max-width: 600px) {
+  .modal-content {
+    width: 95%;
+  }
+
+  .guessDistribution {
+    width: 100%;
+    padding-inline: 0;
+  }
+
+  .modalFooter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .board {
+    width: 99%;
+  }
+
+  .square {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 410px) {
+  .square {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+  }
 }

@@ -44,7 +44,6 @@ class App {
   #result = [];
   #userGuess;
   #stats;
-  #solution;
 
   constructor() {
     this.__updateLocalStorage.bind(this);
@@ -55,8 +54,9 @@ class App {
         this.#history = this.__asyncLocalStorage.getItem() || this.#history;
 
         console.log("Getting players from server");
-        const resp = await this.__getPlayers();
-        this.#players = (await resp.json()).doc;
+        const response = await this.__getPlayers();
+        const resp = await response.json();
+        this.#players = resp.players;
 
         console.log("Fetching data from local storage");
 
@@ -100,7 +100,7 @@ class App {
   };
 
   __getPlayers = async () =>
-    await fetch("http://3.8.180.45:9000/api/v1/player/getAllPlayers");
+    await fetch("http://3.8.180.45:9000/api/v1/players/getAllPlayers");
 
   //Delay function
   __wait(seconds) {
@@ -145,7 +145,8 @@ class App {
     this.__populateStatistics();
 
     if (this.#stats) {
-      attempts.textContent += `${5 - this.#stats.rowIndex}`;
+      console.log(attempts.textContent);
+      attempts.textContent = ` ${5 - this.#stats.rowIndex}`;
 
       this.#stats.boardState.forEach(({ id }) =>
         this.#players.splice(
@@ -343,6 +344,7 @@ class App {
         );
 
         //[2] Adds players shirt number to the board
+        console.log(gehsus);
         this.__addToSquares(board.childNodes[2], `${gehsus.number}`);
 
         //[3]Adds players position played to the board
